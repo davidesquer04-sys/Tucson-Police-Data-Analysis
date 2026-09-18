@@ -44,6 +44,15 @@ def temporal_coverage(df):
     if missing_days:
         print(f"  First few missing dates: {missing_days[:5]}")
 
+def categorical_summary(df: pd.DataFrame, columns: list, top_n: int = 8) -> None:
+    print("5. CATEGORICAL FIELD SUMMARIES")
+    for col in columns:
+        if col not in df.columns:
+            continue
+        n_unique = df[col].nunique(dropna=True)
+        print(f"\n--- {col}  ({n_unique} unique values) ---")
+        print(df[col].value_counts(dropna=False).head(top_n))
+
 def main():
     path = sys.argv[1] if len(sys.argv) > 1 else "TPDOpenData_PoliceActivity_2025.csv"
     df = load_data(path)
@@ -51,5 +60,6 @@ def main():
     missingness_report(df)
     duplicate_check(df)
     temporal_coverage(df)
+    categorical_summary(df)
 
 main()
